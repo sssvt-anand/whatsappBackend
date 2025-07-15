@@ -2,6 +2,7 @@ package com.whatsapp.backend.dto;
 
 import java.util.List;
 
+//Example for PaginatedResponse
 public class PaginatedResponse<T> {
 	private List<T> content;
 	private int page;
@@ -15,4 +16,19 @@ public class PaginatedResponse<T> {
 		this.totalElements = totalElements;
 	}
 
+	public List<T> getContent() {
+		return content;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public long getTotalElements() {
+		return totalElements;
+	}
 }
