@@ -1,28 +1,25 @@
-# Build stage with Maven and Java 17
+# Build stage
 FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /workspace/app
 
-# Copy the POM file first (for better layer caching)
+# Copy only the POM file first (better caching)
 COPY whatsappbackend/pom.xml .
 
-# Download dependencies (this will cache them unless POM changes)
-RUN mvn dependency:go-offline
+# Download dependencies
+RUN mvn dependency:go-offline -B
 
-# Copy the rest of the source files
+# Copy source files
 COPY whatsappbackend/src ./src
 
 # Build the application
 RUN mvn package -DskipTests
 
-# Runtime stage with just JRE
+# Runtime stage
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
-# Copy the built JAR from the build stage
+# Copy the built JAR
 COPY --from=build /workspace/app/whatsappbackend/target/backend-0.0.1-SNAPSHOT.jar ./app.jar
 
-# Expose the port
 EXPOSE 8080
-
-# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
